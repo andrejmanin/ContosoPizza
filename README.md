@@ -1,9 +1,13 @@
 # Info
-ContosoPizza it is a study project by __Microsoft__ in which people can learn how to create _Controllers_, _RESTful APIs_ and to understand ASP.NET Core works.
+This repository is based on the official [_ASP.NET Core tutorial: Controllers_](https://learn.microsoft.com/en-us/training/modules/build-web-api-aspnet-core/1-introduction) provided by Microsoft.  
 
-There is a fully compleated guide with all comments and bloks of code. Also I wrote a useful information about every block of tutorial. Some parts of __Microsoft documentation__ were pasted in it's __own__ verse and some parts were written with __little changes__ or with using __different words__ but the topic was __saved__.
+The sample project **ContosoPizza** was created by Microsoft as a study project to help people learn how to create _Controllers_, build _RESTful APIs_, and better understand how ASP.NET Core works.  
 
-You can find all links from which I took information to compleate this tutorial.
+### Notice
+This repository contains a fully completed version of the guide with all code blocks and additional comments.  
+Some parts of the official Microsoft documentation are included directly or with slight modifications.  
+Other parts are written in my own words, often simplified to make the material easier to understand.  
+I also added my own explanations and clarifications throughout the tutorial.  
 
 ## What is learning here?
 There, you can to learn how to write a RESTful APIs, how they shoold look like, how to write controllers and other intresting things.
@@ -48,7 +52,7 @@ method.
 
 # Links
 There are some necessary links which you'll need if you want to read some intresting info about this guide and ASP.NET
-- [Starting guide from Microsoft](https://learn.microsoft.com/en-us/training/modules/build-web-api-aspnet-core/1-introduction)
+- [ASP.NET Core tutorial: Controllers](https://learn.microsoft.com/en-us/training/modules/build-web-api-aspnet-core/1-introduction)
 - [OpenAPI](https://learn.microsoft.com/uk-ua/aspnet/core/fundamentals/openapi/aspnetcore-openapi?view=aspnetcore-9.0&tabs=visual-studio%2Cvisual-studio-code)
 - [HttpRepl](https://learn.microsoft.com/uk-ua/aspnet/core/web-api/http-repl/?view=aspnetcore-9.0&tabs=windows)
 - [Error: unable to find an openapi description](https://learn.microsoft.com/en-us/answers/questions/1665010/i-received-the-error-unable-to-find-an-openapi-des)
