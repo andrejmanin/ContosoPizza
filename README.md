@@ -234,8 +234,8 @@ In code to show which action to use in which case, are special build-in attribut
 
 A binding source attribute defines the location at which an action parameter's value is found. Here are the existing binding attributes:
 
------------------------------------------------------------------------------
 |   Attribute       |   Binding source                                      |
+|---------------------------------------------------------------------------|
 |   [FromBody]      |   Requests body                                       |
 |   [FromForm]      |   Form data in the request body                       |
 |   [FromHeader]    |   Request header                                      |
@@ -264,8 +264,8 @@ public ActionResult<Pizza> Get([FromQuery] int id) {
 
 As you can see, your methods in the controller class return ``ActionResult<T>`` type. Each ``ActionResult`` instance use in the preceding action is mapped to the corresponding HTTP status code. In the following table you can see main code results:
 
------------------------------------------------------------------------------
 | ASP.NET Core action result  |     HTTP status code    |   Description     |
+|---------------------------------------------------------------------------|
 |   ``Ok`` is complied        |            200          | request was correctly processed without issues |
 |   ``NotFound``              |            404          | Data which user tried to find was not found or not exist |
 
