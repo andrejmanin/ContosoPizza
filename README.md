@@ -9,56 +9,50 @@ Some parts of the official Microsoft documentation are included directly or with
 Other parts are written in my own words, often simplified to make the material easier to understand.  
 I also added my own explanations and clarifications throughout the tutorial.  
 
-## What is learning here?
+# What is learning here?
 There, you can to learn how to write a RESTful APIs, how they shoold look like, how to write controllers and other intresting things.
 
 Also we'll look how to create a _database_.
 
-### Little bit about Controllers
-In this project you will see these type of _Controllers_:
-- GET - __getting__ data from the web service;
-- POST - __uploading__ data to the web service;
-- PUT - __update__ data on the web service;
-- PACH - __update__ data with _specific_ instructions on the web service;
-- DELETE - __delete__ data from the web service;
-
-_In this case we will not use __PACH__ controller_.
-
-## ControllerBase
+# ControllerBase
 A controller is a public class which contains many also public methods known as _actions_. Usually they located in the _Controllers_ directory. The _actions_ are initialized as HTTP endpoints via routing. So an HTTP ``GET`` request to ``https://localhost:{port}/weatherforecast`` call the ``Get()`` method of the ``WeatherForecastController`` class.
 
 Firstly, pay atention that WeatherForecastController class inherits from the ``ControllerBase`` class. This base class gives standard functionality for handlibg HTTP requests. 
 
-### Atention
+## Atention
 Don't create a web API controller from the ``Controller`` class. ``Controller`` comes from the ``ControllerBase`` and adds support for views, so it's for handling webpages, not web API requests.
 
-## API controller class attributes
+# API controller class attributes
 There are two important attributes which are applied in the ``WeatherForecastController``:
+
 ```cs
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
 ```
+
 ``[ApiController]`` enables _individual behavior_, that make it easier to build web APIs. Some bahaviors include _parameter source inference_, _attribute routing as a requirement_, and _model validation error-handlingenhancements_.
 
 ``[Route]`` defines the routing pattern ``[controller]``. The controller's name (case-intensitive, without the _Controller_ suffix) replaces the ``[controller]`` token. Also can be useful thise kind of naming controller: ``[Rote("weatherforecast")]``.
 
-### Give weather results usign the Get() method
+## Give weather results usign the Get() method
 Now ``WeatherForecastController`` conteins with a one action method, designed by the ``[HttpGet(Name = "GetWeatherForecast")]`` attribute. This attribute routes HTTP ``GET`` requests to the 
 ```cs 
 public IEnumerable<WeatherForecast> Get()
 ```
 method. 
 
-## Models
+# Models
 To save somewhere your data, you need to have a data store on which you'll also can perform operations.
 
 You need a ``model`` class to represent a pizzas from your storege. The model will contains properties of a piza. The model is used to pass data in the web API and to save pizza's options in data store.
 
 To create a pizza model you need to write next line in the terminal:
+
 ```bash
 mkdir Models
 ```
+
 Next, select _Models_ directory and create a new file with name _Pizza.cs_ from the VS Code UI by clicking on the __new file__ button.
 Or write other command in the terminal:
 
@@ -74,7 +68,7 @@ touch Models/Pizza.cs
 
 The directory name _Models_ was grabet from the _model-view-controller_ architecture that web API uses.
 
-### Initialize Pizza class
+## Initialize Pizza class
 In the _Pizza.cs_ file write next lines of code:
 ```cs
 namespace ContosoPizza.Models;
@@ -88,12 +82,14 @@ public class Pizza
 }
 ```
 
-## Service
+# Service
 Next step is to create _Services_ in your project.
 Write in the console next line to create a new _directory_:
+
 ```bash
 mkdir Services
 ```
+
 Or use VS Core UI by clicking on the __create directory__ button.
 
 Select _Services_ directory and create new file with called _PizzaService.cs_.
@@ -152,13 +148,14 @@ public static class PizzaService
 You'll have two pizzas by default. This is a __demo__ service, so new data will not save in the data store, if you'll try to _restart_ your program, you see __just those two__ pizzas which created in the PizzaService constructor.
 
 Run next command to bild your project:
+
 ```Bash
 dotnet build
 ```
 
 If you'll see errors while building, check the output for troubleshooting information.
 
-## Controller
+# Controller
 A _controller_ is a public class with many public methods whose called as actions. By standart, controllers are placed in the _Controllers_ directory. The actions are exposed as HTTP endpoints inside the web API controller. The name of the controller directory _Controllers_ comes from the _model-view-controller_ architecture that the web API uses. And also by convention, controller class names are ends with _Controller_ suffix.
 
 ## How to create a controller
@@ -204,15 +201,15 @@ public class ContosoPizzaController : ControllerBase
 }
 ```
 
-### Explanation
+## Explanation
 This class derives from ControllerBase, the base class for working with HTTP requests in ASP.NET Core. It also includes two standart attributes: ``[ApiController]`` and ``[Route("[controller]")]``.
 
-#### Attributes
+## Attributes
 The ``[ApiController]`` attribute indicates that a type and all derived types are used to service HTTP API responses. [ApiControllerAttribute Class](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.apicontrollerattribute?view=aspnetcore-9.0)
 
 The ``[Route]`` attribute specifies URL patern for a controller or action. [Create web APIs with ASP.NET Core: Attributes](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-9.0#attributes)
 
-#### ControllerBase class
+## ControllerBase class
 A web API based on controllers consist of one or more controllers classes that derive from [__ControllerBase__](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.mvc.controllerbase?view=aspnetcore-9.0). The web API project template provides a starter controller:
 
 ```cs
@@ -223,7 +220,7 @@ Web API controllers shoold derive from __ControllerBase__ rather from _Controlle
 
 __Pay your atention__: this controller named ``ContosoPizzaController``, it handles requests to ``https://localhost:{port}/contosopizza``.
 
-#### Actions
+## Actions
 Now you got to the implementing REST actions. How above wrote, in ASP.NET Core there are five different actions:
 - GET - receiving data from the web service;
 - POST - pushing data to the web service;
@@ -233,7 +230,7 @@ Now you got to the implementing REST actions. How above wrote, in ASP.NET Core t
 
 In code to show which action to use in which case, are special build-in attributes: ``[HttpGet]``, ``[HttpPost]``, ``[HttpPut]``, ``[HttpPach]``, ``[HttpDelete]``. 
 
-#### Binding source parameter inference
+# Binding source parameter inference
 
 A binding source attribute defines the location at which an action parameter's value is found. Here are the existing binding attributes:
 
@@ -272,16 +269,16 @@ As you can see, your methods in the controller class return ``ActionResult<T>`` 
 |   ``Ok`` is complied        |            200          | request was correctly processed without issues |
 |   ``NotFound``              |            404          | Data which user tried to find was not found or not exist |
 
-### Build and run
+# Build and run
 Build and start the web API by running command below:
 
 ```Bash
 dotnet run
 ```
 
-## Testing controller
+# Testing controller
 
-### Http file
+## Http file
 Firstly, download extantion __REST Client__ so you can start testing in this way.
 
 1. Open __ContosoPizza.http__
@@ -359,7 +356,7 @@ Firstly, download extantion __REST Client__ so you can start testing in this way
     }
     ```
 
-### Command Line HTTP Read-Eval-Print Loop (REPL)
+## Command Line HTTP Read-Eval-Print Loop (REPL)
 1. Open the ``httprepl`` terminal;
 2. Connect to your web API by running the following command:
     
