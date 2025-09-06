@@ -50,6 +50,114 @@ public IEnumerable<WeatherForecast> Get()
 ```
 method. 
 
+## Models
+To save somewhere your data, you need to have a data store on which you'll also can perform operations.
+
+You need a ``model`` class to represent a pizzas from your storege. The model will contains properties of a piza. The model is used to pass data in the web API and to save pizza's options in data store.
+
+To create a pizza model you need to write next line in the terminal:
+```bash
+mkdir Models
+```
+Next, select _Models_ directory and create a new file with name _Pizza.cs_ from the VS Code UI by clicking on the __new file__ button.
+Or write other command in the terminal:
+
+### On Windows:
+```bash
+New-Item Models/Pizza.cs
+```
+
+### On Linux:
+```bash
+touch Models/Pizza.cs
+```
+
+The directory name _Models_ was grabet from the _model-view-controller_ architecture that web API uses.
+
+### Initialize Pizza class
+In the _Pizza.cs_ file write next lines of code:
+```cs
+namespace ContosoPizza.Models;
+
+public class Pizza
+{
+    public int Id { get; set; }
+    public string? Name { get; set; }
+    public bool IsBlutenFree { get; set; }
+    public decimal Price { get; set; }
+}
+```
+
+## Service
+Next step is to create _Services_ in your project.
+Write in the console next line to create a new _directory_:
+```bash
+mkdir Services
+```
+Or use VS Core UI by clicking on the __create directory__ button.
+
+Select _Services_ directory and create new file with called _PizzaService.cs_.
+Or use preceding command to create a new file from the terminal.
+
+Add the following code to _Services/PizzaService.cs_ and don't forget to save your changes. This code will create in-memory data service.
+
+```cs
+using ContosoPizza.Models;
+
+namespace ContosoPizza.Services;
+
+public static class PizzaService
+{
+    static List<Pizza> Pizzas { get; }
+    static int nextId = 3;
+    static PizzaService()
+    {
+        Pizzas = new List<Pizza>
+        {
+            new Pizza { Id = 1, Name = "Margherita", IsBlutenFree = false, Price = 7.50M },
+            new Pizza { Id = 2, Name = "Funghi", IsBlutenFree = true, Price = 8.50M }
+        };
+    }
+
+    public static List<Pizza> GetAll() => Pizzas;
+
+    public static Pizza? Get(int id) => Pizzas.FirstOrDefault(p => p.Id == id);
+
+    public static void Add(Pizza pizza)
+    {
+        pizza.Id = nextId++;
+        Pizzas.Add(pizza);
+    }
+
+    public static void Delete(int id)
+    {
+        var pizza = Get(id);
+        if (pizza is null)
+            return;
+
+        Pizzas.Remove(pizza);
+    }
+
+    public static void Update(Pizza pizza)
+    {
+        var index = Pizzas.FindIndex(p => p.Id == pizza.Id);
+        if (index == -1)
+            return;
+            
+        Pizzas[index] = pizza;
+    }
+}
+```
+
+You'll have two pizzas by default. This is a __demo__ service, so new data will not save in the data store, if you'll try to _restart_ your program, you see __just those two__ pizzas which created in the PizzaService constructor.
+
+Run next command to bild your project:
+```Bash
+dotnet build
+```
+
+If you'll see errors while building, check the output for troubleshooting information.
+
 # Links
 There are some necessary links which you'll need if you want to read some intresting info about this guide and ASP.NET
 - [ASP.NET Core tutorial: Controllers](https://learn.microsoft.com/en-us/training/modules/build-web-api-aspnet-core/1-introduction)
