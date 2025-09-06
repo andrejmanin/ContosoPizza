@@ -1,15 +1,15 @@
-# Info
+# 🔭 Info
 This repository is based on the official [_ASP.NET Core tutorial: Controllers_](https://learn.microsoft.com/en-us/training/modules/build-web-api-aspnet-core/1-introduction) provided by Microsoft.  
 
 The sample project **ContosoPizza** was created by Microsoft as a study project to help people learn how to create _Controllers_, build _RESTful APIs_, and better understand how ASP.NET Core works.  
 
-### Notice
+### 🖋️ Notice
 This repository contains a fully completed version of the guide with all code blocks and additional comments.  
 Some parts of the official Microsoft documentation are included directly or with slight modifications.  
 Other parts are written in my own words, often simplified to make the material easier to understand.  
 I also added my own explanations and clarifications throughout the tutorial.  
 
-# What is learning here?
+# 🕵🏼 What is learning here?
 There, you can to learn how to write a RESTful APIs, how they shoold look like, how to write controllers and other intresting things.
 
 Also we'll look how to create a _database_.
@@ -475,7 +475,7 @@ Firstly, download extantion __REST Client__ so you can start testing in this way
 
 Return to the ``dotnet`` terminal and shut down the web API by selection CTRL+C on your keyboard.
 
-# Links
+# 🔗 Links
 There are some necessary links which you'll need if you want to read some intresting info about this guide and ASP.NET
 - [ASP.NET Core tutorial: Controllers](https://learn.microsoft.com/en-us/training/modules/build-web-api-aspnet-core/1-introduction)
 - [OpenAPI](https://learn.microsoft.com/uk-ua/aspnet/core/fundamentals/openapi/aspnetcore-openapi?view=aspnetcore-9.0&tabs=visual-studio%2Cvisual-studio-code)
