@@ -192,12 +192,40 @@ public class ContosoPizzaController : ControllerBase
     }
 
     // POST action
-
+    [HttpPost]
+    public IActionResult Create(Pizza pizza)
+    {
+        PizzaService.Add(pizza);
+        return CreatedAtAction(nameof(Get), new { id = pizza.Id }, pizza);
+    }
 
     // PUT action
+    [HttpPut("{id}")]
+    public IActionResult Update(int id, Pizza pizza)
+    {
+        if (id != pizza.Id)
+            return BadRequest();
 
+        var existingPizza = PizzaService.Get(id);
+        if (existingPizza is null)
+            return NotFound();
+
+        PizzaService.Update(pizza);
+        return NoContent();
+    }
 
     // DELETE action
+    [HttpDelete("{id}")]
+    public IActionResult Delete(int id)
+    {
+        var pizza = PizzaService.Get(id);
+        if (pizza is null)
+            return NotFound();
+
+        PizzaService.Delete(id);
+        return NoContent();
+    }
+    
 }
 ```
 
@@ -264,10 +292,13 @@ public ActionResult<Pizza> Get([FromQuery] int id) {
 
 As you can see, your methods in the controller class return ``ActionResult<T>`` type. Each ``ActionResult`` instance use in the preceding action is mapped to the corresponding HTTP status code. In the following table you can see main code results:
 
-| ASP.NET Core action result  |     HTTP status code    |   Description     |
-|-----------------------------|-------------------------|-------------------|
-|   ``Ok`` is complied        |            200          | request was correctly processed without issues |
-|   ``NotFound``              |            404          | Data which user tried to find was not found or not exist |
+| ASP.NET Core action result  |     HTTP status code    |                             Description                             |
+|-----------------------------|-------------------------|---------------------------------------------------------------------|
+|   ``Ok`` is complied        |            200          |             Request was correctly processed without issues          |
+|   ``CreatedAtAction``       |            201          |                   A data was addet to the storage                   |
+|       ``NoContent``         |            204          |                  A data object was updated/deleted                  |
+|  ``BadRequest`` is implied  |            400          |                   A request body object is invalid                  |
+|   ``NotFound``              |            404          |       Data which user tried to find was not found or not exist      |
 
 # Build and run
 Build and start the web API by running command below:
@@ -288,14 +319,45 @@ Firstly, download extantion __REST Client__ so you can start testing in this way
     GET {{ContosoPizza_HostAddress}}/ContosoPizza/
     Accept: application/json
 
+    ###
+
     GET {{ContosoPizza_HostAddress}}/WeatherForecast/
     Accept: application/json
 
+    ###
+
     GET {{ContosoPizza_HostAddress}}/ContosoPizza/1
     Accept: applicationo/json
+    
+    ###
+
+    POST {{ContosoPizza_HostAddress}}/pizza/
+    Content-Type: application/json
+
+    {
+        "name": "Hawaii",
+        "isGlutenFree": false
+    }
+
+    ###
+
+    PUT {{ContosoPizza_HostAddress}}/pizza/3
+    Content-Type: application/json
+
+    {
+        "id": 3,
+        "name": "Hawaiian",
+        "isGlutenFree": false
+    }
+
+    ###
+
+    DELETE {{ContosoPizza_HostAddress}}/pizza/3
+
+    ###
     ```
 
-3. Select the __Send Request__ command above the GET request.
+3. Select the __Send Request__ command above the GET or any other request.
     The command returns a list of all pizzas in JSON:
     ```output
     HTTP/1.1 200 OK
@@ -321,7 +383,7 @@ Firstly, download extantion __REST Client__ so you can start testing in this way
     ]
     ```
 
-    If you'll try request with ``id``, you'll see next responce:
+    If you'll try GET request with ``id``, you'll see next responce:
     ```output
     HTTP/1.1 200 OK
     Connection: close
@@ -356,6 +418,101 @@ Firstly, download extantion __REST Client__ so you can start testing in this way
     }
     ```
 
+    Try POST request, you shoul see something like this:
+    
+    ```output
+    HTTP/1.1 201 Created
+    Connection: close
+    Content-Type: application/json; charset=utf-8
+    Date: Sun, 07 Sep 2025 20:07:24 GMT
+    Server: Kestrel
+    Location: https://localhost:7204/ContosoPizza/3
+    Transfer-Encoding: chunked
+
+    {
+    "id": 3,
+    "name": "Hawaii",
+    "isBlutenFree": false,
+    "price": 6.5
+    }
+    ```
+
+    There is a PUT request:
+
+    ```output
+    HTTP/1.1 204 No Content
+    Connection: close
+    Date: Sun, 07 Sep 2025 20:08:22 GMT
+    Server: Kestrel
+    ```
+
+    After bouth those request, if you'll try to do a GET request, you'll see something like this:
+
+    ```
+    HTTP/1.1 200 OK
+    Connection: close
+    Content-Type: application/json; charset=utf-8
+    Date: Sun, 07 Sep 2025 20:09:03 GMT
+    Server: Kestrel
+    Transfer-Encoding: chunked
+
+    [
+    {
+        "id": 1,
+        "name": "Margarita Updated",
+        "isBlutenFree": true,
+        "price": 10.0
+    },
+    {
+        "id": 2,
+        "name": "Funghi",
+        "isBlutenFree": true,
+        "price": 8.50
+    },
+    {
+        "id": 3,
+        "name": "Hawaii",
+        "isBlutenFree": false,
+        "price": 6.5
+    }
+    ]
+    ```
+
+    And also do not forget about DELETE request:
+
+    ```output
+    HTTP/1.1 204 No Content
+    Connection: close
+    Date: Sun, 07 Sep 2025 20:11:09 GMT
+    Server: Kestrel
+    ```
+
+    After GET request:
+    
+    ```output
+    HTTP/1.1 200 OK
+    Connection: close
+    Content-Type: application/json; charset=utf-8
+    Date: Sun, 07 Sep 2025 20:11:40 GMT
+    Server: Kestrel
+    Transfer-Encoding: chunked
+
+    [
+    {
+        "id": 2,
+        "name": "Funghi",
+        "isBlutenFree": true,
+        "price": 8.50
+    },
+    {
+        "id": 3,
+        "name": "Hawaii",
+        "isBlutenFree": false,
+        "price": 6.5
+    }
+    ]
+    ```
+
 ## Command Line HTTP Read-Eval-Print Loop (REPL)
 1. Open the ``httprepl`` terminal;
 2. Connect to your web API by running the following command:
@@ -381,7 +538,7 @@ Firstly, download extantion __REST Client__ so you can start testing in this way
     ```output
     https://localhost:{PORT}/> ls
     .                 []
-    ContosoPizza      [GET]
+    ContosoPizza      [GET|POST]
     WeatherForecast   [GET]
     ```
 
@@ -472,8 +629,167 @@ Firstly, download extantion __REST Client__ so you can start testing in this way
     "traceId": "00-0115864da252cc4d9c1bbaa53b59cd83-2303a214f54fcf3e-00"
     }
     ```
+7. Lets see, how to query other requests:
+    Firstly, you need to go to the ContosoPizza endpoint by running following command:
+    
+    ```.NET CLI
+    cd ContosoPizza
+    ```
+
+    And after that look on the other actions on the API:
+
+    ```.NET CLI
+    ls
+    ```
+
+    The proceditn command will shows all avaliable APIs:
+
+    ```output
+    https://localhost:{PORT}/ContosoPizza> ls
+    .      [GET|POST]
+    ..     []
+    {id}   [GET|PUT|DELETE]
+    ```
+    Lets query ``POST`` request. To do it, write next line in your terminal:
+    
+    ```.NET CLI
+    post -c "{"name":"Peperoni", "isBlutenFree": true, "price":"7.5"}"
+    ```
+
+    The proceding command returns the newly created pizza:
+
+    ```output
+    HTTP/1.1 201 Created
+    Content-Type: application/json; charset=utf-8
+    Date: Mon, 08 Sep 2025 14:42:30 GMT
+    Location: https://localhost:7204/ContosoPizza/3
+    Server: Kestrel
+    Transfer-Encoding: chunked
+
+    {
+    "id": 3,
+    "name": "Peperoni",
+    "isBlutenFree": true,
+    "price": 7,5
+    }
+    ```
+
+    Lets see, if our pizza was created:
+
+    ```.NET CLI
+    get 3
+    ```
+
+    Use the id _3_, because after the program start, there are only 2 pizza objects, so we use next (3) id.
+
+    ```output
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=utf-8
+    Date: Mon, 08 Sep 2025 14:48:06 GMT
+    Server: Kestrel
+    Transfer-Encoding: chunked
+
+    {
+    "id": 3,
+    "name": "Peperoni",
+    "isBlutenFree": true,
+    "price": 7,5
+    }
+    ```
+
+    Lets update our new pizza by using ``PUT`` request:
+
+    ```.NET CLI
+    put 3 -c "{"id": 3, "name":"Peperoni", "isBlutenFree": false, "price": "10.0"}"
+    ```
+
+    After proceding command you'll see next output:
+
+    ```output
+    HTTP/1.1 204 No Content
+    Date: Mon, 08 Sep 2025 14:53:37 GMT
+    Server: Kestrel
+    ```
+
+    Now, we need to see, if our changes were saved.
+
+    ```.NET CLI
+    get 3
+    ```
+
+    ```output
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=utf-8
+    Date: Mon, 08 Sep 2025 14:53:45 GMT
+    Server: Kestrel
+    Transfer-Encoding: chunked
+
+    {
+    "id": 3,
+    "name": "Peperoni",
+    "isBlutenFree": false,
+    "price": 10
+    }
+    ```
+
+    How you can see, our data was successfully updated.
+
+    And do not forget about ``DELETE`` request.
+
+    ```.NET CLI
+    delete 3
+    ```
+
+    The proceding command returns a ``204 No Content`` result for success:
+
+    ```output
+    HTTP/1.1 204 No Content
+    Date: Mon, 08 Sep 2025 15:00:02 GMT
+    Server: Kestrel
+    ```
+
+    Lets verify that the pizza was removed.
+
+    ```.NET CLI
+    get
+    ```
+
+    ```output
+    HTTP/1.1 200 OK
+    Content-Type: application/json; charset=utf-8
+    Date: Mon, 08 Sep 2025 15:01:20 GMT
+    Server: Kestrel
+    Transfer-Encoding: chunked
+
+    [
+    {
+        "id": 1,
+        "name": "Margherita",
+        "isBlutenFree": false,
+        "price": 7,5
+    },
+    {
+        "id": 2,
+        "name": "Funghi",
+        "isBlutenFree": true,
+        "price": 8,5
+    }
+    ]
+    ```
 
 Return to the ``dotnet`` terminal and shut down the web API by selection CTRL+C on your keyboard.
+
+# Result
+Now you're finished implementing and testing a newly created web API build with ASP.NET Core.
+
+Summarising, you created an ASP.NET Core web API runnign on .NET. The web api reads, creates, updates and deletes pizzas from an in-memory data source.
+
+You learned basic things from ASP.NET Core. We seen how to create application by using _ASP.NET Core Web API templete_ and created classes that inherit from the ``ControllerBase`` class and contains methods that respond to ``HTTP`` requests.
+
+Now you can improve your knolages by reading web pages from _Links_ module.
+Also don't forget to read about EF Core, because how you already seen, if you'll try to reboot your program with in-memory data source you'll lose all your data.
+
+See you in next tutorials!
 
 # 🔗 Links
 There are some necessary links which you'll need if you want to read some intresting info about this guide and ASP.NET
@@ -482,3 +798,5 @@ There are some necessary links which you'll need if you want to read some intres
 - [HttpRepl](https://learn.microsoft.com/uk-ua/aspnet/core/web-api/http-repl/?view=aspnetcore-9.0&tabs=windows)
 - [Error: unable to find an openapi description](https://learn.microsoft.com/en-us/answers/questions/1665010/i-received-the-error-unable-to-find-an-openapi-des)
 - [Create web APIs with ASP.NET Core](https://learn.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-9.0#attribute-routing-requirement)
+- [Entity Framework Core: Welcome!](https://learn.microsoft.com/en-us/ef/core/)
+- [Microsoft Trainign cources](https://learn.microsoft.com/en-us/training/)
